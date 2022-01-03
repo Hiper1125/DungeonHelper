@@ -224,7 +224,7 @@ module.exports = {
                         ],
                       });
 
-                      guild.channels.create("👾｜Dungeon Party", {
+                      guild.channels.create(`🏰〉${name}`, {
                         type: "GUILD_VOICE",
                         parent: parent,
                         permissionOverwrites: [
