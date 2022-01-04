@@ -134,7 +134,7 @@ const modifyCharacter = async (interaction, guild) => {
     .setThumbnail(DungeonHelper.user.displayAvatarURL())
     .setFooter("Dungeon Helper", DungeonHelper.user.displayAvatarURL());
 
-    const row = new MessageActionRow()
+  const row = new MessageActionRow()
     .addComponents(
       new MessageButton()
         .setCustomId("basic")
@@ -152,8 +152,8 @@ const modifyCharacter = async (interaction, guild) => {
         .setCustomId("race")
         .setLabel("Races")
         .setStyle("PRIMARY")
-    );  
-    const row2 = new MessageActionRow()
+    );
+  const row2 = new MessageActionRow()
     .addComponents(
       new MessageButton()
         .setCustomId("class")
@@ -272,6 +272,18 @@ const viewBasic = async (interaction, guild, modify = false) => {
       embeds: [embed],
       components: [row],
     });
+
+    const filter = (btnInteraction) => {
+      return interaction.member === btnInteraction.member;
+    };
+
+    const collector = interaction.channel.createMessageComponentCollector({
+      filter,
+      time: 15000,
+      max: 1,
+    });
+
+    collector.on("collect", async (i) => {});
   } else {
     await interaction.editReply({
       content: "‎",
@@ -349,6 +361,20 @@ const viewStat = async (interaction, guild, modify = false) => {
       embeds: [embed],
       components: [physicalRow, mentalRow],
     });
+
+    const filter = (btnInteraction) => {
+      return interaction.member === btnInteraction.member;
+    };
+
+    const collector = interaction.channel.createMessageComponentCollector({
+      filter,
+      time: 15000,
+      max: 1,
+    });
+
+    collector.on("collect", async (i) => {
+      modifyStat(interaction, guild, i.customId);
+    });
   } else {
     await interaction.followUp({
       content: "‎",
@@ -358,6 +384,55 @@ const viewStat = async (interaction, guild, modify = false) => {
   }
 };
 
+const modifyStat = async (interaction, guild, stat) => {
+  const embed = new MessageEmbed()
+    .setColor("#e6101d")
+    .setTitle("Modify " + stat);
+
+  // TODO write the descriptions
+  if (stat === "strength") {
+    embed.setDescription("Strength is bla bla bla");
+  } else if (stat === "dexterity") {
+    embed.setDescription("Dexterity is bla bla bla");
+  } else if (stat === "constitution") {
+    embed.setDescription("Constitution is bla bla bla");
+  } else if (stat === "intelligence") {
+    embed.setDescription("Intelligence is bla bla bla");
+  } else if (stat === "wisdom") {
+    embed.setDescription("Wisdom is bla bla bla");
+  } else if (stat === "charisma") {
+    embed.setDescription("Charisma is bla bla bla");
+  }
+
+  embed
+    .setTimestamp()
+    .setAuthor("Dungeon Helper", DungeonHelper.user.displayAvatarURL())
+    .setThumbnail(DungeonHelper.user.displayAvatarURL())
+    .setFooter("Dungeon Helper", DungeonHelper.user.displayAvatarURL());
+
+  await interaction.editReply({
+    content: "‎",
+    ephemeral: true,
+    embeds: [embed],
+    components: [],
+  });
+
+  const filter = (btnInteraction) => {
+    return interaction.member === btnInteraction.member;
+  };
+  const collector = interaction.channel.createMessageCollector({
+    filter,
+    time: 15000,
+    max: 1,
+  });
+
+  collector.on("collect", async (m) => {
+    // TODO aggiornare il DB (m.content)
+
+    
+  });
+};
+
 const viewRace = async (interaction, guild, modify = false) => {
   const embed = new MessageEmbed()
     .setColor("#e6101d")
@@ -365,7 +440,7 @@ const viewRace = async (interaction, guild, modify = false) => {
     .setDescription("Basics")
     .addFields(
       // TODO Prendere dati dal DB
-      { name: "Name", value: "Not setted" },
+      { name: "Name", value: "Not setted" }
     )
     .setTimestamp()
     .setAuthor("Dungeon Helper", DungeonHelper.user.displayAvatarURL())
@@ -373,19 +448,30 @@ const viewRace = async (interaction, guild, modify = false) => {
     .setFooter("Dungeon Helper", DungeonHelper.user.displayAvatarURL());
 
   if (modify) {
-    const row = new MessageActionRow()
-      .addComponents(
-        new MessageButton()
-          .setCustomId("before")
-          .setLabel("﹤")
-          .setStyle("PRIMARY")
-      );
+    const row = new MessageActionRow().addComponents(
+      new MessageButton().setCustomId("add").setLabel("Add").setStyle("PRIMARY")
+    );
 
     await interaction.update({
       content: "‎",
       ephemeral: true,
       embeds: [embed],
       components: [row],
+    });
+
+    const filter = (btnInteraction) => {
+      return interaction.member === btnInteraction.member;
+    };
+
+    const collector = interaction.channel.createMessageComponentCollector({
+      filter,
+      time: 15000,
+      max: 1,
+    });
+
+    collector.on("collect", async (i) => {
+      if (i.customId === "add") {
+      }
     });
   } else {
     await interaction.followUp({
@@ -403,7 +489,7 @@ const viewClass = async (interaction, guild, modify = false) => {
     .setDescription("Basics")
     .addFields(
       // TODO Prendere dati dal DB
-      { name: "Name", value: "Not setted" },
+      { name: "Name", value: "Not setted" }
     )
     .setTimestamp()
     .setAuthor("Dungeon Helper", DungeonHelper.user.displayAvatarURL())
@@ -411,13 +497,12 @@ const viewClass = async (interaction, guild, modify = false) => {
     .setFooter("Dungeon Helper", DungeonHelper.user.displayAvatarURL());
 
   if (modify) {
-    const row = new MessageActionRow()
-      .addComponents(
-        new MessageButton()
-          .setCustomId("before")
-          .setLabel("Add")
-          .setStyle("PRIMARY")
-      );
+    const row = new MessageActionRow().addComponents(
+      new MessageButton()
+        .setCustomId("before")
+        .setLabel("Add")
+        .setStyle("PRIMARY")
+    );
 
     await interaction.update({
       content: "‎",
@@ -441,7 +526,7 @@ const viewTalent = async (interaction, guild, modify = false) => {
     .setDescription("Basics")
     .addFields(
       // TODO Prendere dati dal DB
-      { name: "Name", value: "Not setted" },
+      { name: "Name", value: "Not setted" }
     )
     .setTimestamp()
     .setAuthor("Dungeon Helper", DungeonHelper.user.displayAvatarURL())
@@ -449,19 +534,30 @@ const viewTalent = async (interaction, guild, modify = false) => {
     .setFooter("Dungeon Helper", DungeonHelper.user.displayAvatarURL());
 
   if (modify) {
-    const row = new MessageActionRow()
-      .addComponents(
-        new MessageButton()
-          .setCustomId("before")
-          .setLabel("Add")
-          .setStyle("PRIMARY")
-      );
+    const row = new MessageActionRow().addComponents(
+      new MessageButton().setCustomId("add").setLabel("Add").setStyle("PRIMARY")
+    );
 
     await interaction.update({
       content: "‎",
       ephemeral: true,
       embeds: [embed],
       components: [row],
+    });
+
+    const filter = (btnInteraction) => {
+      return interaction.member === btnInteraction.member;
+    };
+
+    const collector = interaction.channel.createMessageComponentCollector({
+      filter,
+      time: 15000,
+      max: 1,
+    });
+
+    collector.on("collect", async (i) => {
+      if (i.customId === "add") {
+      }
     });
   } else {
     await interaction.followUp({
@@ -479,7 +575,7 @@ const viewLore = async (interaction, guild, modify = false) => {
     .setDescription("Basics")
     .addFields(
       // TODO Prendere dati dal DB
-      { name: "Name", value: "Not setted" },
+      { name: "Name", value: "Not setted" }
     )
     .setTimestamp()
     .setAuthor("Dungeon Helper", DungeonHelper.user.displayAvatarURL())
@@ -487,19 +583,33 @@ const viewLore = async (interaction, guild, modify = false) => {
     .setFooter("Dungeon Helper", DungeonHelper.user.displayAvatarURL());
 
   if (modify) {
-    const row = new MessageActionRow()
-      .addComponents(
-        new MessageButton()
-          .setCustomId("before")
-          .setLabel("Add")
-          .setStyle("PRIMARY")
-      );
+    const row = new MessageActionRow().addComponents(
+      new MessageButton()
+        .setCustomId("before")
+        .setLabel("Add")
+        .setStyle("PRIMARY")
+    );
 
     await interaction.update({
       content: "‎",
       ephemeral: true,
       embeds: [embed],
       components: [row],
+    });
+
+    const filter = (btnInteraction) => {
+      return interaction.member === btnInteraction.member;
+    };
+
+    const collector = interaction.channel.createMessageComponentCollector({
+      filter,
+      time: 15000,
+      max: 1,
+    });
+
+    collector.on("collect", async (i) => {
+      if (i.customId === "add") {
+      }
     });
   } else {
     await interaction.followUp({
