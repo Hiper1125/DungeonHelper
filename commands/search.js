@@ -1,6 +1,6 @@
 const { SlashCommandBuilder } = require("@discordjs/builders");
 const { Permissions, MessageEmbed } = require("discord.js");
-var XMLHttpRequest = require('xhr2');
+var XMLHttpRequest = require("xhr2");
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -23,34 +23,72 @@ module.exports = {
 
     .addStringOption((option) =>
       option
-        .setName("term")
-        .setDescription("The optional term that you want to search")
+        .setName("keyword")
+        .setDescription("The optional keyword that you want to search")
     ),
 
   async execute(interaction) {
     await interaction.deferReply({ content: "Executing...", ephemeral: true });
 
     const category = interaction.options.getString("category");
-    const term = interaction.options.getString("term");
+    const keyword = interaction.options.getString("keyword");
     var url = "https://www.dnd5eapi.co/api/" + category;
 
-    if (term != null) {
-      if (term != "" && term != " ") {
-        url += "/" + term;
-      }
+    if (keyword) {
+      let words = keyword.toLowerCase().split(" ");
+      url += "/" + words.join("-");
+      console.log(url);
     }
 
-    getJSON(url, function (err, data) {
+    getJSON(url, async function (err, data) {
       if (err !== null) {
+        const embed = new MessageEmbed()
+          .setColor("#013455")
+          .setTitle("Error " + err)
+          .setDescription(
+            "The searched key (" +
+              interaction.options.getString("keyword") +
+              ") was not found on the server, try with a different keyword!"
+          )
+          .setAuthor("Dungeon Helper", DungeonHelper.user.displayAvatarURL())
+          .setThumbnail(DungeonHelper.user.displayAvatarURL())
+          .setFooter("Dungeon Helper", DungeonHelper.user.displayAvatarURL());
+
+        await interaction.editReply({
+          content: "‎",
+          ephemeral: true,
+          embeds: [embed],
+        });
+
         console.log("Something went wrong: " + err);
       } else {
-        console.log(JSON.stringify(data, null, 2));
+        if (keyword) {
+          //different embed based on the choosen category
+
+          const embed = new MessageEmbed()
+            .setColor("#013455")
+            .setTitle(data.name)
+            .setDescription(data.desc[0])
+            .setAuthor("Dungeon Helper", DungeonHelper.user.displayAvatarURL())
+            .setThumbnail(DungeonHelper.user.displayAvatarURL())
+            .setFooter("Dungeon Helper", DungeonHelper.user.displayAvatarURL());
+
+          await interaction.editReply({
+            content: "‎",
+            ephemeral: true,
+            embeds: [embed],
+          });
+        } else {
+          //print first x items
+        }
+
+        //console.log(JSON.stringify(data, null, 2));
       }
     });
   },
 };
 
-var getJSON = function (url, callback) {
+const getJSON = (url, callback) => {
   var xhr = new XMLHttpRequest();
   xhr.open("GET", url, true);
   xhr.responseType = "json";
