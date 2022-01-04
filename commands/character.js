@@ -207,7 +207,14 @@ const modifyCharacter = async (interaction, guild) => {
   });
 };
 
-const viewCharacter = (interaction, guild) => {};
+const viewCharacter = (interaction, guild) => {
+  viewBasic(interaction, guild);
+  viewStat(interaction, guild);
+  viewRace(interaction, guild);
+  viewClass(interaction, guild);
+  viewTalent(interaction, guild);
+  viewLore(interaction, guild);
+};
 
 const viewBasic = async (interaction, guild, modify = false) => {
   const embed = new MessageEmbed()
@@ -266,7 +273,7 @@ const viewBasic = async (interaction, guild, modify = false) => {
       components: [row],
     });
   } else {
-    await interaction.reply({
+    await interaction.editReply({
       content: "‎",
       ephemeral: true,
       embeds: [embed],
@@ -343,7 +350,7 @@ const viewStat = async (interaction, guild, modify = false) => {
       components: [physicalRow, mentalRow],
     });
   } else {
-    await interaction.reply({
+    await interaction.followUp({
       content: "‎",
       ephemeral: true,
       embeds: [embed],
@@ -381,7 +388,7 @@ const viewRace = async (interaction, guild, modify = false) => {
       components: [row],
     });
   } else {
-    await interaction.reply({
+    await interaction.followUp({
       content: "‎",
       ephemeral: true,
       embeds: [embed],
@@ -419,7 +426,7 @@ const viewClass = async (interaction, guild, modify = false) => {
       components: [row],
     });
   } else {
-    await interaction.reply({
+    await interaction.followUp({
       content: "‎",
       ephemeral: true,
       embeds: [embed],
@@ -457,7 +464,7 @@ const viewTalent = async (interaction, guild, modify = false) => {
       components: [row],
     });
   } else {
-    await interaction.reply({
+    await interaction.followUp({
       content: "‎",
       ephemeral: true,
       embeds: [embed],
@@ -495,7 +502,7 @@ const viewLore = async (interaction, guild, modify = false) => {
       components: [row],
     });
   } else {
-    await interaction.reply({
+    await interaction.followUp({
       content: "‎",
       ephemeral: true,
       embeds: [embed],
