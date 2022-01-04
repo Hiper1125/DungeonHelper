@@ -11,7 +11,7 @@ module.exports = {
     .setName("new")
     .setDescription("Create a new campaign or a new character")
 
-    .addSubcommand((subcommand) =>
+    .addSubcommand(subcommand =>
       subcommand
         .setName("campaign")
         .setDescription("Create a new campaign")
@@ -23,11 +23,11 @@ module.exports = {
         )
     )
 
-    .addSubcommand((subcommand) =>
+    .addSubcommand(subcommand =>
       subcommand
       .setName("note")
       .setDescription("Create a new note")
-      .addStringOption((option) =>
+      .addStringOption(option =>
         option
           .setName("campaing")
           .setDescription("Define the name of the campaign")
@@ -261,7 +261,7 @@ module.exports = {
         });
 
       const embed = new MessageEmbed()
-        .setColor("#013455")
+        .setColor("#e6101d")
         .setTitle("Campain " + name + " created!")
         .setDescription(
           "Your new campain has been created, and now you got owner permissions!"
@@ -271,13 +271,13 @@ module.exports = {
         .setFooter("Dungeon Helper", DungeonHelper.user.displayAvatarURL());
 
       await interaction.editReply({
-        content: "Success!",
+        content: "‎",
         ephemeral: true,
         embeds: [embed],
       });
     } else {
       const embed = new MessageEmbed()
-      .setColor("#013455")
+      .setColor("#e6101d")
       .setTitle("Campain " + name + " exist!")
       .setDescription(
         "The campaign already exist"
@@ -287,7 +287,7 @@ module.exports = {
       .setFooter("Dungeon Helper", DungeonHelper.user.displayAvatarURL());
 
     await interaction.editReply({
-      content: "Error!",
+      content: "‎",
       ephemeral: true,
       embeds: [embed],
     });
@@ -324,7 +324,7 @@ module.exports = {
             })
             .then(async(channel) => {
               const embed = new MessageEmbed()
-              .setColor("#013455")
+              .setColor("#e6101d")
               .setTitle("Note created!")
               .setDescription(
                 "Your note channel has been created.\nYou can find it here <#" + channel.id + ">"
@@ -334,14 +334,14 @@ module.exports = {
               .setFooter("Dungeon Helper", DungeonHelper.user.displayAvatarURL());
       
             await interaction.editReply({
-              content: "Success!",
+              content: "‎",
               ephemeral: true,
               embeds: [embed],
             });
             });
           } else {
             const embed = new MessageEmbed()
-              .setColor("#013455")
+              .setColor("#e6101d")
               .setTitle("Note already created!")
               .setDescription(
                 "You already have a note channel.\nYou can find it here <#" + guild.channels.cache.find(c => c.type == "GUILD_TEXT" && c.topic == "Note of the campaign " + campaignName + " of " + interaction.user.id).id + ">"
@@ -351,7 +351,7 @@ module.exports = {
               .setFooter("Dungeon Helper", DungeonHelper.user.displayAvatarURL());
       
             await interaction.editReply({
-              content: "Error!",
+              content: "‎",
               ephemeral: true,
               embeds: [embed],
             });
@@ -359,7 +359,7 @@ module.exports = {
         } else if (interaction.member.roles.cache.get(guild.roles.cache.find(r => r.name === campaignName + " Master").id) != null || 
           interaction.member.roles.cache.get(guild.roles.cache.find(r => r.name === campaignName + " Owner").id) != null) {
             const embed = new MessageEmbed()
-              .setColor("#013455")
+              .setColor("#e6101d")
               .setTitle("Note already created!")
               .setDescription(
                 "You're a GM, you can take notes here <#" + guild.channels.cache.find(c => c.type == "GUILD_TEXT" && c.name == "🐉｜master" && c.parent == campaignCategory).id + ">"
@@ -369,13 +369,13 @@ module.exports = {
               .setFooter("Dungeon Helper", DungeonHelper.user.displayAvatarURL());
       
             await interaction.editReply({
-              content: "Error!",
+              content: "‎",
               ephemeral: true,
               embeds: [embed],
             });
         } else {
           const embed = new MessageEmbed()
-          .setColor("#013455")
+          .setColor("#e6101d")
           .setTitle("You are not in the campaign")
           .setDescription(
             "You aren't an adventurer of the campaign " + campaignName
@@ -385,14 +385,14 @@ module.exports = {
           .setFooter("Dungeon Helper", DungeonHelper.user.displayAvatarURL());
   
         await interaction.editReply({
-          content: "Error!",
+          content: "‎",
           ephemeral: true,
           embeds: [embed],
         });
         }
       } else {
         const embed = new MessageEmbed()
-        .setColor("#013455")
+        .setColor("#e6101d")
         .setTitle("The campaign doesn't exist")
         .setDescription(
           "The campaign " + campaignName + " doesn't exist!"
@@ -402,14 +402,14 @@ module.exports = {
         .setFooter("Dungeon Helper", DungeonHelper.user.displayAvatarURL());
 
       await interaction.editReply({
-        content: "Error!",
+        content: "‎",
         ephemeral: true,
         embeds: [embed],
       });
       }
     }} else {
       const embed = new MessageEmbed()
-      .setColor("#013455")
+      .setColor("#e6101d")
       .setTitle("Accept the rules")
       .setDescription(
         "To use the commands you have to accept the rules"
@@ -419,7 +419,7 @@ module.exports = {
       .setFooter("Dungeon Helper", DungeonHelper.user.displayAvatarURL());
 
       await interaction.editReply({
-        content: "Error!",
+        content: "‎",
         ephemeral: true,
         embeds: [embed],
       });

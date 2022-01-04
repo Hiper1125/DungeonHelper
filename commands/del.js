@@ -52,7 +52,7 @@ module.exports = {
           category.delete();
 
           const embed = new MessageEmbed()
-            .setColor('#013455')
+            .setColor('#e6101d')
             .setTitle("Campain " + name + " deleted!")
             .setDescription('Your campain has been deleted, and you lose your owner permissions!')
             .setAuthor("Dungeon Helper", DungeonHelper.user.displayAvatarURL())
@@ -60,13 +60,13 @@ module.exports = {
             .setFooter("Dungeon Helper", DungeonHelper.user.displayAvatarURL());
 
           await interaction.editReply({
-            content: "Success!",
+            content: "‎",
             ephemeral: true, 
             embeds: [embed]
           });
         } else {
           const embed = new MessageEmbed()
-            .setColor('#013455')
+            .setColor('#e6101d')
             .setTitle("Campain " + name + " can't be delted!")
             .setDescription("You're not the owner of the campain!")
             .setAuthor("Dungeon Helper", DungeonHelper.user.displayAvatarURL())
@@ -74,7 +74,7 @@ module.exports = {
             .setFooter("Dungeon Helper", DungeonHelper.user.displayAvatarURL());
 
           await interaction.editReply({
-            content: "Error!",
+            content: "‎",
             ephemeral: true,
             embeds: [embed]
           });
@@ -89,7 +89,7 @@ module.exports = {
             guild.channels.cache.find(c => c.type == "GUILD_TEXT" && c.topic == "Note of the campaign " + campaignName + " of " + interaction.user.id).delete()
             .then(async(channel) => {
               const embed = new MessageEmbed()
-              .setColor("#013455")
+              .setColor("#e6101d")
               .setTitle("Note deleted!")
               .setDescription(
                 "Your note channel has been deleted."
@@ -99,14 +99,14 @@ module.exports = {
               .setFooter("Dungeon Helper", DungeonHelper.user.displayAvatarURL());
       
             await interaction.editReply({
-              content: "Success!",
+              content: "‎",
               ephemeral: true,
               embeds: [embed],
             });
             });
           } else {
             const embed = new MessageEmbed()
-              .setColor("#013455")
+              .setColor("#e6101d")
               .setTitle("Note doesn't exist!")
               .setDescription(
                 "You don't have any note channel"
@@ -116,7 +116,7 @@ module.exports = {
               .setFooter("Dungeon Helper", DungeonHelper.user.displayAvatarURL());
       
             await interaction.editReply({
-              content: "Error!",
+              content: "‎",
               ephemeral: true,
               embeds: [embed],
             });
@@ -124,7 +124,7 @@ module.exports = {
         } else if (interaction.member.roles.cache.get(guild.roles.cache.find(r => r.name === campaignName + " Master").id) != null || 
           interaction.member.roles.cache.get(guild.roles.cache.find(r => r.name === campaignName + " Owner").id) != null) {
             const embed = new MessageEmbed()
-              .setColor("#013455")
+              .setColor("#e6101d")
               .setTitle("Cannot delete the channel!")
               .setDescription(
                 "You can't delete the <#" + guild.channels.cache.find(c => c.type == "GUILD_TEXT" && c.name == "🐉｜master" && c.parent == campaignCategory).id + "> channel"
@@ -134,13 +134,13 @@ module.exports = {
               .setFooter("Dungeon Helper", DungeonHelper.user.displayAvatarURL());
       
             await interaction.editReply({
-              content: "Error!",
+              content: "‎",
               ephemeral: true,
               embeds: [embed],
             });
         } else {
           const embed = new MessageEmbed()
-          .setColor("#013455")
+          .setColor("#e6101d")
           .setTitle("You are not in the campaign")
           .setDescription(
             "You aren't an adventurer of the campaign " + campaignName
@@ -150,14 +150,14 @@ module.exports = {
           .setFooter("Dungeon Helper", DungeonHelper.user.displayAvatarURL());
   
         await interaction.editReply({
-          content: "Error!",
+          content: "‎",
           ephemeral: true,
           embeds: [embed],
         });
         }
       } else {
         const embed = new MessageEmbed()
-        .setColor("#013455")
+        .setColor("#e6101d")
         .setTitle("The campaign doesn't exist")
         .setDescription(
           "The campaign " + campaignName + " doesn't exist!"
@@ -167,14 +167,14 @@ module.exports = {
         .setFooter("Dungeon Helper", DungeonHelper.user.displayAvatarURL());
 
       await interaction.editReply({
-        content: "Error!",
+        content: "‎",
         ephemeral: true,
         embeds: [embed],
       });
       }
     }} else {
       const embed = new MessageEmbed()
-      .setColor("#013455")
+      .setColor("#e6101d")
       .setTitle("Accept the rules")
       .setDescription(
         "To use the commands you have to accept the rules"
@@ -184,7 +184,7 @@ module.exports = {
       .setFooter("Dungeon Helper", DungeonHelper.user.displayAvatarURL());
 
       await interaction.editReply({
-        content: "Error!",
+        content: "‎",
         ephemeral: true,
         embeds: [embed],
       });

@@ -52,7 +52,7 @@ module.exports = {
         error(interaction, campaign, user);
     }} else {
       const embed = new MessageEmbed()
-      .setColor("#013455")
+      .setColor("#e6101d")
       .setTitle("Accept the rules")
       .setDescription(
         "To use the commands you have to accept the rules"
@@ -62,7 +62,7 @@ module.exports = {
       .setFooter("Dungeon Helper", DungeonHelper.user.displayAvatarURL());
 
       await interaction.editReply({
-        content: "Error!",
+        content: "‎",
         ephemeral: true,
         embeds: [embed],
       });
@@ -72,7 +72,7 @@ module.exports = {
 
 async function error(interaction, campaign, user) {
     const embed = new MessageEmbed()
-    .setColor('#013455')
+    .setColor('#e6101d')
     .setTitle("You don't have the permission to remove")
     .setDescription("Cannot remove the user " + user.username + " from the campaign " + campaign)
     .setAuthor("Dungeon Helper", DungeonHelper.user.displayAvatarURL())
@@ -80,7 +80,7 @@ async function error(interaction, campaign, user) {
     .setFooter("Dungeon Helper", DungeonHelper.user.displayAvatarURL());
 
   await interaction.editReply({
-    content: "Error!",
+    content: "‎",
     ephemeral: true,
     embeds: [embed]
   });
@@ -88,7 +88,7 @@ async function error(interaction, campaign, user) {
 
 async function success(interaction, campaign, user) {
     const embed = new MessageEmbed()
-    .setColor('#013455')
+    .setColor('#e6101d')
     .setTitle("You have removed")
     .setDescription("The user " + user.username + " is removed from the campaign " + campaign)
     .setAuthor("Dungeon Helper", DungeonHelper.user.displayAvatarURL())
@@ -96,7 +96,7 @@ async function success(interaction, campaign, user) {
     .setFooter("Dungeon Helper", DungeonHelper.user.displayAvatarURL());
 
   await interaction.editReply({
-    content: "Succes!",
+    content: "‎",
     ephemeral: true,
     embeds: [embed]
   }); 
