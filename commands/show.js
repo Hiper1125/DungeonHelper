@@ -58,23 +58,7 @@ module.exports = {
           .setThumbnail(DungeonHelper.user.displayAvatarURL())
           .setFooter("Dungeon Helper", DungeonHelper.user.displayAvatarURL());
 
-        switch (category) {
-          case "classes":
-            break;
-          case "races":
-            break;
-          case "equipement":
-            break;
-          case "spells":
-            embed.setDescription(data.desc[0]);
-            break;
-          case "monsters":
-            break;
-          case "feats":
-            break;
-          case "languages":
-            break;
-        }
+          //index.capitalize().replaceAll("-", " ");
 
         await interaction.editReply({
           content: "‎",

@@ -12,13 +12,15 @@ module.exports = {
         .setName("category")
         .setDescription("The category of the information you're looking for")
         .setRequired(true)
-        .addChoice("Feats", "feats")
-        .addChoice("Races", "races")
-        .addChoice("Spells", "spells")
-        .addChoice("Classes", "classes")
-        .addChoice("Monsters", "monsters")
-        .addChoice("Languages", "languages")
-        .addChoice("Equipement", "equipement")
+        .addChoice("Race", "races")
+        .addChoice("Skill", "skills")
+        .addChoice("Spell", "spells")
+        .addChoice("Class", "classes")
+        .addChoice("Monster", "monsters")
+        .addChoice("Language", "languages")
+        .addChoice("Condition", "conditions")
+        .addChoice("Equipment", "equipment")
+        .addChoice("Magic Item", "magic-items")
     )
 
     .addStringOption((option) =>
@@ -69,12 +71,29 @@ module.exports = {
           .setFooter("Dungeon Helper", DungeonHelper.user.displayAvatarURL());
 
         switch (category) {
-          case "classes":
-            break;
           case "races":
+            embed
+              .addField("Alignment", data.alignment, false)
+              .addField("Age", data.age, false)
+              .addField("Size", data.size_description, false)
+              .addField("Languages", data.language_desc, false);
+
+            let traits = "";
+
+            data.traits.forEach((trait) => {
+              traits += trait.name + "\n";
+            });
+
+            embed
+              .addField("Traits", traits, true)
+              .addField("Speed", data.speed.toString(), true);
+
             break;
-          case "equipement":
+
+          case "skills":
+            embed.setDescription(data.desc[0]);
             break;
+
           case "spells":
             embed.setDescription(data.desc[0]);
 
@@ -103,11 +122,103 @@ module.exports = {
             embed.addField("Classes", classes, true);
 
             break;
-          case "monsters":
+          case "classes":
+            if (data.spellcasting) {
+              data.spellcasting.info.forEach((cast) => {
+                embed.addField(cast.name, cast.desc[0], false);
+              });
+            }
+
+            let skills = "";
+
+            data.proficiency_choices[0].from.forEach((skill) => {
+              skills += skill.name.replace("Skill: ", "") + "\n";
+            });
+
+            let items = "";
+
+            data.proficiencies.forEach((item) => {
+              items += item.name + "\n";
+            });
+
+            embed
+              .addField("Skills", skills, true)
+              .addField("Items", items, true);
+
             break;
-          case "feats":
+          case "monsters":
+            embed
+              .addField("Size", data.size, true)
+              .addField("Type", data.type.capitalize(), true)
+              .addField("Alignment", data.alignment.capitalize(), true)
+              .addField("Damage", data.hit_dice, true)
+              .addField("Life", data.hit_points.toString(), true)
+              .addField("XP", (data.xp / 10).toString(), true)
+              .addField("Languages", data.languages.capitalize(), false);
+
+            data.actions.forEach((action) => {
+              embed.addField(action.name, action.desc);
+            });
+
+            if (data.legendary_actions) {
+              data.legendary_actions.forEach((action) => {
+                embed.addField(action.name, action.desc);
+              });
+            }
+
+            if (data.special_abilities) {
+              data.special_abilities.forEach((action) => {
+                embed.addField(action.name, action.desc);
+              });
+            }
             break;
           case "languages":
+            if (data.desc) {
+              embed.setDescription(data.desc);
+            }
+
+            let speakers = "";
+
+            data.typical_speakers.forEach((speaker) => {
+              speakers += speaker + "\n";
+            });
+
+            embed
+              .addField("Speakers", speakers, true)
+              .addField("Type", data.type, true);
+            break;
+
+          case "conditions":
+            let i = 0;
+
+            data.desc.forEach((desc) => {
+              if (i == 0) {
+                embed.setDescription(desc.replace("- ", ""));
+                i++;
+              } else {
+                embed.addField("‎", desc.replace("- ", ""), false);
+              }
+            });
+
+            break;
+
+          case "equipment":
+            objectToEmbed(data, embed, true);
+            break;
+
+          case "magic-items":
+            let j = 0;
+
+            data.desc.forEach((desc) => {
+              if (j == 0) {
+                embed.setDescription(desc);
+                j++;
+              } else {
+                embed.addField("‎", desc, false);
+              }
+            });
+
+            embed.addField("Category", data.equipment_category.name, false);
             break;
         }
 
@@ -123,6 +234,67 @@ module.exports = {
   },
 };
 
+const objectToEmbed = (obj, embed, isFirst = false) => {
+  if (typeof obj === "object") {
+    obj = Object.entries(obj);
+  }
+
+  obj.forEach(([key, value]) => {
+    if (value) {
+      key = key.toString();
+
+      if ((value.isArray && value.length > 0) || typeof value === "object") {
+        // Exceptions
+        if (key === "cost") {
+          embed.addField(
+            key.capitalize().replaceAll("_", " "),
+            value.quantity.toString() + value.unit.toString(),
+            true
+          );
+        } else {
+          embed.addField(
+            key.capitalize().replaceAll("_", " "),
+            objectToString(value, embed),
+            true
+          );
+        }
+      } else {
+        if (!isFirst && key === "name" && key !== "index" && key !== "url") {
+          embed.addField(
+            key.capitalize().replaceAll("_", " "),
+            value.toString(),
+            true
+          );
+        }
+      }
+    }
+  });
+};
+
+const objectToString = (obj, embed) => {
+  let string = "";
+
+  if (typeof obj === "object") {
+    obj = Object.entries(obj);
+  }
+
+  obj.forEach(([key, value]) => {
+    if (value) {
+      key = key.toString();
+
+      if (typeof value === "object") {
+        string += objectToString(value, embed);
+      } else {
+        if (key !== "index" && key !== "url") {
+          string += value.toString() + "\n";
+        }
+      }
+    }
+  });
+
+  return string;
+};
+
 const getJSON = (url, callback) => {
   var xhr = new XMLHttpRequest();
   xhr.open("GET", url, true);
@@ -136,4 +308,8 @@ const getJSON = (url, callback) => {
     }
   };
   xhr.send();
+};
+
+String.prototype.capitalize = function () {
+  return this.charAt(0).toUpperCase() + this.slice(1).toLowerCase();
 };
