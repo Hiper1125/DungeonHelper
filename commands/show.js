@@ -4,8 +4,8 @@ var XMLHttpRequest = require("xhr2");
 
 module.exports = {
   data: new SlashCommandBuilder()
-    .setName("search")
-    .setDescription("Search in the D&D documentation")
+    .setName("show")
+    .setDescription("Show a category of the D&D documentation")
 
     .addStringOption((option) =>
       option
@@ -19,25 +19,14 @@ module.exports = {
         .addChoice("Monsters", "monsters")
         .addChoice("Feats", "feats")
         .addChoice("Languages", "languages")
-    )
-
-    .addStringOption((option) =>
-      option
-        .setName("keyword")
-        .setDescription("The optional keyword that you want to search")
-        .setRequired(true)
     ),
 
   async execute(interaction) {
     await interaction.deferReply({ content: "Executing...", ephemeral: true });
 
     const category = interaction.options.getString("category");
-    const keyword = interaction.options.getString("keyword");
     var url = "https://www.dnd5eapi.co/api/" + category;
 
-
-    let words = keyword.toLowerCase().split(" ");
-    url += "/" + words.join("-");
     console.log(url);
 
     getJSON(url, async function (err, data) {
@@ -46,9 +35,9 @@ module.exports = {
           .setColor("#e6101d")
           .setTitle("Error " + err)
           .setDescription(
-            "The searched key (" +
+            "The searched category (" +
               interaction.options.getString("keyword") +
-              ") was not found on the documentation, try with a different keyword!"
+              ") was not found on the documentation, try with a different one!"
           )
           .setAuthor("Dungeon Helper", DungeonHelper.user.displayAvatarURL())
           .setThumbnail(DungeonHelper.user.displayAvatarURL())
@@ -76,8 +65,7 @@ module.exports = {
             case "races": break;
             case "equipement": break;
             case "spells": 
-            embed.setDescription(data.desc[0])
-            .addField('Inline field title', 'Some value here', true);
+            embed.setDescription(data.desc[0]);
             break;
             case "monsters": break;
             case "feats": break;
