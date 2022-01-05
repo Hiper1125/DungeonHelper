@@ -12,13 +12,13 @@ module.exports = {
         .setName("category")
         .setDescription("The category of the information you're looking for")
         .setRequired(true)
-        .addChoice("Classes", "classes")
-        .addChoice("Races", "races")
-        .addChoice("Equipement", "equipement")
-        .addChoice("Spells", "spells")
-        .addChoice("Monsters", "monsters")
         .addChoice("Feats", "feats")
+        .addChoice("Races", "races")
+        .addChoice("Spells", "spells")
+        .addChoice("Classes", "classes")
+        .addChoice("Monsters", "monsters")
         .addChoice("Languages", "languages")
+        .addChoice("Equipement", "equipement")
     ),
 
   async execute(interaction) {
@@ -49,34 +49,38 @@ module.exports = {
           embeds: [embed],
         });
       } else {
- 
-          //different embed based on the choosen category
+        //different embed based on the choosen category
 
-          let embed = new MessageEmbed()
+        let embed = new MessageEmbed()
           .setColor("#e6101d")
           .setTitle(data.name)
           .setAuthor("Dungeon Helper", DungeonHelper.user.displayAvatarURL())
           .setThumbnail(DungeonHelper.user.displayAvatarURL())
           .setFooter("Dungeon Helper", DungeonHelper.user.displayAvatarURL());
 
-          switch(category)
-          {
-            case "classes": break;
-            case "races": break;
-            case "equipement": break;
-            case "spells": 
+        switch (category) {
+          case "classes":
+            break;
+          case "races":
+            break;
+          case "equipement":
+            break;
+          case "spells":
             embed.setDescription(data.desc[0]);
             break;
-            case "monsters": break;
-            case "feats": break;
-            case "languages": break
-          }
+          case "monsters":
+            break;
+          case "feats":
+            break;
+          case "languages":
+            break;
+        }
 
-          await interaction.editReply({
-            content: "‎",
-            ephemeral: true,
-            embeds: [embed],
-          });
+        await interaction.editReply({
+          content: "‎",
+          ephemeral: true,
+          embeds: [embed],
+        });
 
         //console.log(JSON.stringify(data, null, 2));
       }
