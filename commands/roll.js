@@ -1,102 +1,276 @@
 const { SlashCommandBuilder } = require("@discordjs/builders");
-const { Permissions, MessageEmbed } = require("discord.js");
+const {
+  Permissions,
+  MessageEmbed,
+  MessageActionRow,
+  MessageButton,
+} = require("discord.js");
 
 module.exports = {
   data: new SlashCommandBuilder()
     .setName("roll")
-    .setDescription("Add a user to a campaign")
+    .setDescription("Roll dices according to a given formula")
 
     .addStringOption((option) =>
       option
         .setName("formula")
-        .setDescription("The first formula")
+        .setDescription("The formula for the roll")
         .setRequired(true)
     ),
-  //roll formula1: 2d20 + 6d20 + 1d40  formula2: 3d36 + 8
 
   async execute(interaction) {
-    const formula = interaction.getString("formula");
-    
-    var url = "https://roll.diceapi.com/json/";
+    await interaction.deferReply({
+      content: "Executing...",
+      ephemeral: true,
+    });
+    //roll formula: 2d20 + 6d20 + 1d40 + 20
+    const formula = interaction.options.getString("formula");
 
-    const rolls = formula.split(" ");
+    const { numbers, dices } = getTotal(formula);
 
-    rolls.forEach(roll => {
-        if (roll.includes("d")) {
-            url += roll + "/";
-        }
+    let index = 0;
+
+    const embed = new MessageEmbed()
+      .setColor("#e6101d")
+      .setTitle("Your roll result is " + numbers[index])
+      .setDescription(
+        "You've launched some dices with all your might and you obtained: " +
+          numbers[index]
+      )
+      .addField("Used Formula", formula, false)
+      .addField("Singles Rolls", dices[index], false)
+      .setAuthor("Dungeon Helper", DungeonHelper.user.displayAvatarURL())
+      .setThumbnail(DungeonHelper.user.displayAvatarURL())
+      .setFooter("Dungeon Helper", DungeonHelper.user.displayAvatarURL());
+
+    const row = new MessageActionRow()
+      .addComponents(
+        new MessageButton()
+          .setCustomId("back")
+          .setLabel("﹤")
+          .setStyle("PRIMARY")
+          .setDisabled(index === 0)
+      )
+      .addComponents(
+        new MessageButton()
+          .setCustomId("roll")
+          .setEmoji("🎲")
+          .setLabel("Roll again")
+          .setStyle("PRIMARY")
+      )
+      .addComponents(
+        new MessageButton()
+          .setCustomId("next")
+          .setLabel("﹥")
+          .setStyle("PRIMARY")
+          .setDisabled(index === numbers.length - 1)
+      );
+
+    await interaction.editReply({
+      content: "‎",
+      ephemeral: true,
+      embeds: [embed],
+      components: [row],
     });
 
-    getJSON(url, async function (err, data) {
-        if (err) {
-            const embed = new MessageEmbed()
-            .setColor("#e6101d")
-            .setTitle("Error " + err)
-            .setDescription(
-              "The searched key (" +
-                interaction.options.getString("keyword") +
-                ") was not found on the documentation, try with a different keyword!"
-            )
-            .setAuthor("Dungeon Helper", DungeonHelper.user.displayAvatarURL())
-            .setThumbnail(DungeonHelper.user.displayAvatarURL())
-            .setFooter("Dungeon Helper", DungeonHelper.user.displayAvatarURL());
-  
-          await interaction.editReply({
-            content: "‎",
-            ephemeral: true,
-            embeds: [embed],
-          });
+    const collector = interaction.channel.createMessageComponentCollector({
+      time: 60000,
+    });
+
+    collector.on("collect", async (i) => {
+      if (i.component.customId === "back" || i.component.customId === "next") {
+        if (i.component.customId === "back") {
+          index--;
         } else {
-
-
-            const embed = new MessageEmbed()
-            .setColor("#e6101d")
-            .setTitle("Roll")
-            .setDescription(
-                "The result of the roll is: "
-            )
-            .setAuthor("Dungeon Helper", DungeonHelper.user.displayAvatarURL())
-            .setThumbnail(DungeonHelper.user.displayAvatarURL())
-            .setFooter("Dungeon Helper", DungeonHelper.user.displayAvatarURL());
-
-            await interaction.editReply({
-            content: "‎",
-            ephemeral: true,
-            embeds: [embed],
-            });
+          index++;
         }
+
+        const embed = new MessageEmbed()
+          .setColor("#e6101d")
+          .setTitle("Your roll result is " + numbers[index])
+          .setDescription(
+            "You've launched some dices with all your might and you obtained: " +
+              numbers[index]
+          )
+          .addField("Used Formula", formula, false)
+          .addField("Singles Rolls", dices[index], false)
+          .setAuthor("Dungeon Helper", DungeonHelper.user.displayAvatarURL())
+          .setThumbnail(DungeonHelper.user.displayAvatarURL())
+          .setFooter("Dungeon Helper", DungeonHelper.user.displayAvatarURL());
+
+        row.components[0].setDisabled(index === 0);
+        row.components[row.components.length - 1].setDisabled(
+          index === numbers.length - 1
+        );
+
+        await i.update({
+          content: "‎",
+          ephemeral: true,
+          embeds: [embed],
+          components: [row],
+        });
+      } else if (i.component.customId === "roll") {
+        const { numbers, dices } = getTotal(formula);
+
+        index = 0;
+
+        const embed = new MessageEmbed()
+          .setColor("#e6101d")
+          .setTitle("Your roll result is " + numbers[index])
+          .setDescription(
+            "You've launched some dices with all your might and you obtained: " +
+              numbers[index]
+          )
+          .addField("Used Formula", formula, false)
+          .addField("Singles Rolls", dices[index], false)
+          .setAuthor("Dungeon Helper", DungeonHelper.user.displayAvatarURL())
+          .setThumbnail(DungeonHelper.user.displayAvatarURL())
+          .setFooter("Dungeon Helper", DungeonHelper.user.displayAvatarURL());
+
+        row.components[0].setDisabled(index === 0);
+        row.components[row.components.length - 1].setDisabled(
+          index === numbers.length - 1
+        );
+
+        await i.update({
+          content: "‎",
+          ephemeral: true,
+          embeds: [embed],
+          components: [row],
+        });
+      }
+    });
+
+    collector.on("end", async (collected) => {
+      row.components.forEach((c) => {
+        c.setDisabled(true);
+      });
+
+      await interaction.editReply({
+        content: "‎",
+        ephemeral: true,
+        embeds: [embed],
+        components: [row],
+      });
     });
   },
 };
 
-/*
-{
-"success": true,
-    "dice": [
-        {
-        "value": 4,
-        "type": "d8"
-        },
-        {
-        "value": 2,
-        "type": "d8"
-        },
-        {
-        "value": 4,
-        "type": "d8"
-        },
-        {
-        "value": 3,
-        "type": "d8"
-        },
-        {
-        "value": 4,
-        "type": "d8"
-        },
-        {
-        "value": 5,
-        "type": "d8"
+const isNumber = (n) => {
+  return (
+    !isNaN(parseFloat(n)) &&
+    isFinite(n) &&
+    n != "," &&
+    n != "+" &&
+    n != "-" &&
+    n != "*" &&
+    n != "/"
+  );
+};
+
+const getTotal = (formula) => {
+  let numbers = [];
+
+  const rolls = formula.split(" ");
+
+  rolls.forEach((roll) => {
+    var filtered = roll.split("d").filter(function (el) {
+      return el != null && el != "";
+    });
+
+    // TODO x level of character (# and ✮)
+
+    if (roll.includes("d")) {
+      if (filtered.length > 1) {
+        let numTemp = [];
+        for (let i = 0; i < filtered[0]; i++) {
+          numTemp.push(Math.floor(Math.random() * filtered[1] + 1));
         }
-    ]
-}
-*/
+        numbers.push(numTemp);
+      } else {
+        numbers.push(Math.floor(Math.random() * filtered[0] + 1));
+      }
+    }
+  });
+
+  let total = [];
+  let dices = [];
+
+  let numIndex = 0,
+    totIndex = -1;
+  let operation = ",";
+
+  rolls.forEach((roll) => {
+    if (roll.includes("d") || isNumber(roll)) {
+      let value = 0;
+      let dice = "";
+
+      if (roll.includes("d")) {
+        dice = roll + " = ";
+
+        if (Array.isArray(numbers[numIndex])) {
+          let tDice = "[";
+
+          for (let i = 0; i < numbers[numIndex].length; i++) {
+            let num = numbers[numIndex][i];
+
+            value += parseInt(num);
+            tDice += num;
+
+            if (i != numbers[numIndex].length - 1) {
+              tDice += ", ";
+            }
+          }
+
+          tDice += "] ";
+
+          dice += value;
+          dice += tDice + "\n";
+        } else {
+          value = parseInt(numbers[numIndex]);
+          dice += value + "\n";
+        }
+
+        if (operation === ",") {
+          dices.push(dice);
+        } else {
+          dices[totIndex] += dice;
+        }
+
+        numIndex++;
+      } else {
+        value = parseInt(roll);
+      }
+
+      switch (operation) {
+        case "+":
+          total[totIndex] += value;
+          break;
+        case "-":
+          total[totIndex] -= value;
+          break;
+        case "*":
+          total[totIndex] *= value;
+          break;
+        case "/":
+          total[totIndex] /= value;
+          break;
+        case ",":
+          total.push(value);
+          totIndex++;
+          break;
+        default:
+          break;
+      }
+
+      operation = ",";
+    } else {
+      operation = roll;
+    }
+  });
+
+  return {
+    numbers: total,
+    dices: dices,
+  };
+};
