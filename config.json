@@ -4,5 +4,6 @@
     "guildId": "",
     "dbUser": "",
     "dbPassword": "",
-    "dbName": ""
+    "dbName": "",
+    "cluster": ""
 }

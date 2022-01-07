@@ -1,7 +1,7 @@
-const { dbName, dbUser, dbPassword } = require("./config.json");
-
+const { dbName, dbUser, dbPassword, cluster } = require("./config.json");
 const { MongoClient } = require('mongodb');
-const uri = `mongodb+srv://${dbUser}:${dbPassword}@cluster0.yeabh.mongodb.net/${dbName}?retryWrites=true&w=majority`;
+
+const uri = `mongodb+srv://${dbUser}:${dbPassword}@${cluster}.yeabh.mongodb.net/${dbName}?retryWrites=true&w=majority`;
 
 const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
 

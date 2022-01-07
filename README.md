@@ -29,7 +29,8 @@ Open the configuration file located in the main folder `config.json`.
     "guildId": "",
     "dbUser": "",
     "dbPassword": "",
-    "dbName": ""
+    "dbName": "",
+    "cluster": ""
 }
 ```
 
@@ -41,15 +42,17 @@ Basic configuration
 - `dbUser`, the username of your MongoDB database user access
 - `dbPassword`, the password of your MongoDB database user acess
 - `dbName`, the name of your database 
+- `cluster`, the name of cluster which is hosting your database
 
 ### 💻 Environement
 
 To run the project correctly you will need to import some libraries.
 
+- [@discordjs/builders npm](https://www.npmjs.com/package/@discordjs/builders) for the slash commands
+- [xhr2 npm](https://www.npmjs.com/package/xhr2) for the APIs request
+- [mongodb npm](https://www.npmjs.com/package/mongodb) for the Database
+
 - [Node JS](https://nodejs.org/en/) (v16 or higher) for the environment
-- [@discordjs/builders](https://www.npmjs.com/package/@discordjs/builders) for the slash commands
-- [xhr2](https://www.npmjs.com/package/xhr2) for the APIs request
-- [mongodb](https://www.npmjs.com/package/mongodb) for the Database
 - [Atlas Cluster](https://www.mongodb.com/cloud/atlas/lp/general/try) for the Database hosting (can be customized in the `database/connection.js` file)
 
 # 📑 License
