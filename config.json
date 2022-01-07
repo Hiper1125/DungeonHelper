@@ -1,5 +1,9 @@
 {
     "token": "",
     "clientId": "",
-    "guildId": ""
+    "guildId": "",
+    "dbUser": "",
+    "dbPassword": "",
+    "dbName": "",
+    "cluster": ""
 }
