@@ -1,5 +1,8 @@
 {
-    "token": "",
-    "clientId": "",
-    "guildId": ""
+    "token": "ODc2MTc0MDQ2OTkwMDUzNDA4.YRgOqw.OvDHmHSOERJyGzpNvzUCKTO-yk0",
+    "clientId": "876174046990053408",
+    "guildId": "793410773757067284",
+    "dbUser": "DungeonHelper",
+    "dbPassword": "HRwXOeNSlcR4VaRy",
+    "dbName": "data"
 }
