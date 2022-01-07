@@ -6,6 +6,8 @@ const {
   MessageButton,
 } = require("discord.js");
 
+const thumbnail = "https://cdn.discordapp.com/attachments/428214132613971979/929025586129682462/image_processing20201020-1513-1a7pmsx.gif";
+
 module.exports = {
   data: new SlashCommandBuilder()
     .setName("roll")
@@ -40,7 +42,7 @@ module.exports = {
       .addField("Used Formula", formula, false)
       .addField("Singles Rolls", dices[index], false)
       .setAuthor("Dungeon Helper", DungeonHelper.user.displayAvatarURL())
-      .setThumbnail(DungeonHelper.user.displayAvatarURL())
+      .setThumbnail(thumbnail)
       .setFooter("Dungeon Helper", DungeonHelper.user.displayAvatarURL());
 
     const row = new MessageActionRow()
@@ -95,7 +97,7 @@ module.exports = {
           .addField("Used Formula", formula, false)
           .addField("Singles Rolls", dices[index], false)
           .setAuthor("Dungeon Helper", DungeonHelper.user.displayAvatarURL())
-          .setThumbnail(DungeonHelper.user.displayAvatarURL())
+          .setThumbnail(thumbnail)
           .setFooter("Dungeon Helper", DungeonHelper.user.displayAvatarURL());
 
         row.components[0].setDisabled(index === 0);
@@ -124,7 +126,7 @@ module.exports = {
           .addField("Used Formula", formula, false)
           .addField("Singles Rolls", dices[index], false)
           .setAuthor("Dungeon Helper", DungeonHelper.user.displayAvatarURL())
-          .setThumbnail(DungeonHelper.user.displayAvatarURL())
+          .setThumbnail(thumbnail)
           .setFooter("Dungeon Helper", DungeonHelper.user.displayAvatarURL());
 
         row.components[0].setDisabled(index === 0);

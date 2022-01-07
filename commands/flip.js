@@ -22,18 +22,20 @@ module.exports = {
     if (result == 0) {
       //head
       url += "head.png";
-      flip = "Head";
+      flip = "head";
     } //tails
     else {
       url += "tails.png";
-      flip = "Tails";
+      flip = "tails";
     }
 
     const embed = new MessageEmbed()
       .setColor("#e6101d")
       .setTitle("You flipped " + flip)
       .setDescription(
-        "You've launched a coin with all your might and you obtained: " + flip
+        "You've launched a coin with all your might and you obtained: " +
+          flip +
+          "!"
       )
       .setAuthor("Dungeon Helper", DungeonHelper.user.displayAvatarURL())
       .setThumbnail(url)
@@ -79,7 +81,8 @@ module.exports = {
           .setTitle("You flipped " + flip)
           .setDescription(
             "You've launched a coin with all your might and you obtained: " +
-              flip
+              flip +
+              "!"
           )
           .setAuthor("Dungeon Helper", DungeonHelper.user.displayAvatarURL())
           .setThumbnail(url)
