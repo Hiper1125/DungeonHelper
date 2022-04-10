@@ -18,12 +18,25 @@ module.exports = {
         .setName("formula")
         .setDescription("The formula for the roll")
         .setRequired(true)
+    )
+    .addBooleanOption((option) => 
+      option
+        .setName("private")
+        .setDescription("Private roll") 
+        .setRequired(false)
     ),
 
   async execute(interaction) {
+
+    let private = false;
+
+    if (interaction.options.getBoolean("private")) {
+      private = interaction.options.getBoolean("private");
+    }
+
     await interaction.deferReply({
       content: "Executing...",
-      ephemeral: true,
+      ephemeral: private,
     });
     //roll formula: 2d20 + 6d20 + 1d40 + 20
     const formula = interaction.options.getString("formula");
@@ -70,7 +83,7 @@ module.exports = {
 
     await interaction.editReply({
       content: "‎",
-      ephemeral: true,
+      ephemeral: private,
       embeds: [embed],
       components: [row],
     });
@@ -107,7 +120,7 @@ module.exports = {
 
         await i.update({
           content: "‎",
-          ephemeral: true,
+          ephemeral: private,
           embeds: [embed],
           components: [row],
         });
@@ -136,7 +149,7 @@ module.exports = {
 
         await i.update({
           content: "‎",
-          ephemeral: true,
+          ephemeral: private,
           embeds: [embed],
           components: [row],
         });
@@ -150,7 +163,7 @@ module.exports = {
 
       await interaction.editReply({
         content: "‎",
-        ephemeral: true,
+        ephemeral: private,
         embeds: [embed],
         components: [row],
       });
