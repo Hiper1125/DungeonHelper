@@ -10,6 +10,7 @@ A discord bot made for playing Dungeon and Dragons, completely free to download 
 Here are some of the main features of the bot
 
 - Roll dice according to a formula (/roll `formula: d20 + 2d10`) 
+- Flip a shiny coin and test your luck (/flip) 
 - List all items in a category (/show `category: Monsters`)
 - Give information about an item (/search ```category: Magic Item``` ```keyword: Longbow```)
 - Create a character (/character crate `campaing: Uspua`)
