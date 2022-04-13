@@ -13,7 +13,6 @@ Here are some of the main features of the bot
 - Flip a shiny coin and test your luck (/flip) 
 - List all items in a category (/show `category: Monsters`)
 - Give information about an item (/search ```category: Magic Item``` ```keyword: Longbow```)
-- Create a character (/character crate `campaing: Uspua`)
 - Create a campaing (/new campaign `name: Uspua`)
 - Add user to a campagin (/add `user: HIPER@1125` `role: Master`)
 - Remove user from a campaing (/remove `user: XedaGmr#5016` `role: Adventurer`)
