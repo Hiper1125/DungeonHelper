@@ -1,37 +1,53 @@
-## Welcome to GitHub Pages
+# 🐉 Dungeon Helper
 
-You can use the [editor on GitHub](https://github.com/Hiper1125/DungeonHelper/edit/gh-pages/index.md) to maintain and preview the content for your website in Markdown files.
+A discord bot made for playing Dungeon and Dragons, completely free to download 🧙🏻‍♂️
 
-Whenever you commit to this repository, GitHub Pages will run [Jekyll](https://jekyllrb.com/) to rebuild the pages in your site, from the content in your Markdown files.
+- If you need help with this project, you can join our discord server by just clicking [here](https://discord.gg/hKFFG2JD9M).
+- If you don't have any development knowledge, we suggest you to join our Discord server to get help.*
 
-### Markdown
+### 🎲 Features
 
-Markdown is a lightweight and easy-to-use syntax for styling your writing. It includes conventions for
+Here are some of the main features of the bot
 
-```markdown
-Syntax highlighted code block
+- Roll dice according to a formula (/roll `formula: d20 + 2d10`) 
+- Flip a shiny coin and test your luck (/flip) 
+- List all items in a category (/show `category: Monsters`)
+- Give information about an item (/search ```category: Magic Item``` ```keyword: Longbow```)
+- Create a character (/character crate `campaing: Uspua`)
+- Create a campaing (/new campaign `name: Uspua`)
+- Add user to a campagin (/add `user: HIPER@1125` `role: Master`)
+- Remove user from a campaing (/remove `user: XedaGmr#5016` `role: Adventurer`)
+- Create a note channel (/new note `campaing: Cardmillion`)
 
-# Header 1
-## Header 2
-### Header 3
+### ⚡ Configuration
 
-- Bulleted
-- List
+Open the configuration file located in the main folder `config.json`.
 
-1. Numbered
-2. List
-
-**Bold** and _Italic_ and `Code` text
-
-[Link](url) and ![Image](src)
+```json
+{
+    "token": "",
+    "clientId": "",
+    "guildId": ""
+}
 ```
 
-For more details see [Basic writing and formatting syntax](https://docs.github.com/en/github/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax).
+Basic configuration
 
-### Jekyll Themes
+- `token`, the token of your bot available on the [Discord Developers](https://discordapp.com/developers/applications) section
+- `clientId`, the client id of the application also available on the [Discord Developers](https://discordapp.com/developers/applications) section
+- `guildId`, the id of the discord server you want the bot to run in
 
-Your Pages site will use the layout and styles from the Jekyll theme you have selected in your [repository settings](https://github.com/Hiper1125/DungeonHelper/settings/pages). The name of this theme is saved in the Jekyll `_config.yml` configuration file.
+### 💻 Environement
 
-### Support or Contact
+To run the project correctly you will need to import some libraries.
 
-Having trouble with Pages? Check out our [documentation](https://docs.github.com/categories/github-pages-basics/) or [contact support](https://support.github.com/contact) and we’ll help you sort it out.
+- [Node JS](https://nodejs.org/en/) (v16 or higher) for the environment
+- [@discordjs/builders](https://www.npmjs.com/package/@discordjs/builders) for the slash commands
+- [xhr2](https://www.npmjs.com/package/xhr2) for the APIs request
+
+# 📑 License
+We use a standard [MIT](https://github.com/Hiper1125/dnd-bot/blob/main/LICENSE) license.
+Please do not withdraw the license and keep the credits on this project.
+
+# 👤 Authors
+Made by [HIPER#1125](https://github.com/Hiper1125) and [XedaGmr#5016](https://github.com/XedaGmr) with ❤️
