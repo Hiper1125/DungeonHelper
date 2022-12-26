@@ -1,9 +1,9 @@
 const { SlashCommandBuilder } = require("@discordjs/builders");
 const {
-  Permissions,
-  ActionRowBuilder,
-  ButtonBuilder,
+  PermissionsBitField,
+  ChannelType,
   EmbedBuilder,
+  Colors,
 } = require("discord.js");
 
 module.exports = {
@@ -49,217 +49,256 @@ module.exports = {
       ) != null
     ) {
       if (interaction.options.getSubcommand() === "campaign") {
-        const name = interaction.options.getString("name").capitalize();
+        let name = interaction.options.getString("name");
+
+        if (name.charAt(0) !== name.charAt(0).toUpperCase()) {
+          name = name.capitalize();
+        }
 
         if (
           guild.channels.cache.find(
-            (c) => c.type == "GUILD_CATEGORY" && c.name == "🎲・" + name
+            (c) => c.type == ChannelType.GuildCategory && c.name == "🎲・" + name
           ) == null
         ) {
           guild.roles
             .create({
               name: name + " Owner",
-              color: "YELLOW",
+              color: Colors.Yellow,
             })
             .then((roleOwner) => {
               guild.roles
                 .create({
                   name: name + " Master",
-                  color: "RED",
+                  color: Colors.Red,
                 })
                 .then((roleMaster) => {
                   guild.roles
                     .create({
                       name: name,
-                      color: "BLUE",
+                      color: Colors.Blue,
                     })
                     .then((role) => {
                       interaction.member.roles.add(roleOwner.id);
 
                       guild.channels
                         .create("🎲・" + name, {
-                          type: "GUILD_CATEGORY",
+                          type: ChannelType.GuildCategory,
                           permissionOverwrites: [
                             {
                               id: guild.roles.everyone.id,
                               deny: [
-                                Permissions.FLAGS.SEND_MESSAGES,
-                                Permissions.FLAGS.VIEW_CHANNEL,
+                                PermissionsBitField.Flags.SendMessages,
+                                PermissionsBitField.Flags.SendMessagesInThreads,
+                                PermissionsBitField.Flags.ViewChannel,
                               ],
                             },
                             {
                               id: role.id,
                               allow: [
-                                Permissions.FLAGS.VIEW_CHANNEL,
-                                Permissions.FLAGS.SEND_MESSAGES,
-                                Permissions.FLAGS.READ_MESSAGE_HISTORY,
+                                PermissionsBitField.Flags.CreatePublicThreads,
+                                PermissionsBitField.Flags.ViewChannel,
+                                PermissionsBitField.Flags.SendMessages,
+                                PermissionsBitField.Flags.SendMessagesInThreads,
+                                PermissionsBitField.Flags.ReadMessageHistory,
                               ],
                             },
                             {
                               id: roleMaster.id,
                               allow: [
-                                Permissions.FLAGS.VIEW_CHANNEL,
-                                Permissions.FLAGS.SEND_MESSAGES,
-                                Permissions.FLAGS.READ_MESSAGE_HISTORY,
+                                PermissionsBitField.Flags.CreatePublicThreads,
+                                PermissionsBitField.Flags.ViewChannel,
+                                PermissionsBitField.Flags.SendMessages,
+                                PermissionsBitField.Flags.SendMessagesInThreads,
+                                PermissionsBitField.Flags.ReadMessageHistory,
                               ],
                             },
                             {
                               id: roleOwner.id,
                               allow: [
-                                Permissions.FLAGS.VIEW_CHANNEL,
-                                Permissions.FLAGS.SEND_MESSAGES,
-                                Permissions.FLAGS.READ_MESSAGE_HISTORY,
+                                PermissionsBitField.Flags.CreatePublicThreads,
+                                PermissionsBitField.Flags.ViewChannel,
+                                PermissionsBitField.Flags.SendMessages,
+                                PermissionsBitField.Flags.SendMessagesInThreads,
+                                PermissionsBitField.Flags.ReadMessageHistory,
                               ],
                             },
                           ],
                         })
                         .then((parent) => {
                           guild.channels.create("🌍｜world", {
-                            type: "GUILD_TEXT",
+                            type: ChannelType.GuildText,
                             parent: parent,
                             permissionOverwrites: [
                               {
                                 id: guild.roles.everyone.id,
                                 deny: [
-                                  Permissions.FLAGS.SEND_MESSAGES,
-                                  Permissions.FLAGS.VIEW_CHANNEL,
+                                  PermissionsBitField.Flags.SendMessages,
+                                  PermissionsBitField.Flags
+                                    .SendMessagesInThreads,
+                                  PermissionsBitField.Flags.ViewChannel,
                                 ],
                               },
                               {
                                 id: role.id,
                                 allow: [
-                                  Permissions.FLAGS.VIEW_CHANNEL,
-                                  Permissions.FLAGS.READ_MESSAGE_HISTORY,
+                                  PermissionsBitField.Flags.ViewChannel,
+                                  PermissionsBitField.Flags.ReadMessageHistory,
                                 ],
-                                deny: [Permissions.FLAGS.SEND_MESSAGES],
+                                deny: [
+                                  PermissionsBitField.Flags.SendMessages,
+                                  PermissionsBitField.Flags
+                                    .SendMessagesInThreads,
+                                ],
                               },
                               {
                                 id: roleMaster.id,
                                 allow: [
-                                  Permissions.FLAGS.VIEW_CHANNEL,
-                                  Permissions.FLAGS.SEND_MESSAGES,
-                                  Permissions.FLAGS.READ_MESSAGE_HISTORY,
+                                  PermissionsBitField.Flags.ViewChannel,
+                                  PermissionsBitField.Flags.SendMessages,
+                                  PermissionsBitField.Flags
+                                    .SendMessagesInThreads,
+                                  PermissionsBitField.Flags.ReadMessageHistory,
                                 ],
                               },
                               {
                                 id: roleOwner.id,
                                 allow: [
-                                  Permissions.FLAGS.VIEW_CHANNEL,
-                                  Permissions.FLAGS.SEND_MESSAGES,
-                                  Permissions.FLAGS.READ_MESSAGE_HISTORY,
+                                  PermissionsBitField.Flags.ViewChannel,
+                                  PermissionsBitField.Flags.SendMessages,
+                                  PermissionsBitField.Flags
+                                    .SendMessagesInThreads,
+                                  PermissionsBitField.Flags.ReadMessageHistory,
                                 ],
                               },
                             ],
                           });
 
                           guild.channels.create("🧙｜players", {
-                            type: "GUILD_TEXT",
+                            type: ChannelType.GuildText,
                             parent: parent,
                           });
 
                           guild.channels.create("🐉｜master", {
-                            type: "GUILD_TEXT",
+                            type: ChannelType.GuildText,
                             parent: parent,
                             permissionOverwrites: [
                               {
                                 id: guild.roles.everyone.id,
                                 deny: [
-                                  Permissions.FLAGS.SEND_MESSAGES,
-                                  Permissions.FLAGS.VIEW_CHANNEL,
+                                  PermissionsBitField.Flags.SendMessages,
+                                  PermissionsBitField.Flags
+                                    .SendMessagesInThreads,
+                                  PermissionsBitField.Flags.ViewChannel,
                                 ],
                               },
                               {
                                 id: role.id,
                                 deny: [
-                                  Permissions.FLAGS.VIEW_CHANNEL,
-                                  Permissions.FLAGS.SEND_MESSAGES,
-                                  Permissions.FLAGS.READ_MESSAGE_HISTORY,
+                                  PermissionsBitField.Flags.ViewChannel,
+                                  PermissionsBitField.Flags.SendMessages,
+                                  PermissionsBitField.Flags
+                                    .SendMessagesInThreads,
+                                  PermissionsBitField.Flags.ReadMessageHistory,
                                 ],
                               },
                               {
                                 id: roleMaster.id,
                                 allow: [
-                                  Permissions.FLAGS.VIEW_CHANNEL,
-                                  Permissions.FLAGS.SEND_MESSAGES,
-                                  Permissions.FLAGS.READ_MESSAGE_HISTORY,
+                                  PermissionsBitField.Flags.ViewChannel,
+                                  PermissionsBitField.Flags.SendMessages,
+                                  PermissionsBitField.Flags
+                                    .SendMessagesInThreads,
+                                  PermissionsBitField.Flags.ReadMessageHistory,
                                 ],
                               },
                               {
                                 id: roleOwner.id,
                                 allow: [
-                                  Permissions.FLAGS.VIEW_CHANNEL,
-                                  Permissions.FLAGS.SEND_MESSAGES,
-                                  Permissions.FLAGS.READ_MESSAGE_HISTORY,
+                                  PermissionsBitField.Flags.ViewChannel,
+                                  PermissionsBitField.Flags.SendMessages,
+                                  PermissionsBitField.Flags
+                                    .SendMessagesInThreads,
+                                  PermissionsBitField.Flags.ReadMessageHistory,
                                 ],
                               },
                             ],
                           });
 
                           guild.channels.create("🎶｜music", {
-                            type: "GUILD_TEXT",
+                            type: ChannelType.GuildText,
                             parent: parent,
                             permissionOverwrites: [
                               {
                                 id: guild.roles.everyone.id,
                                 deny: [
-                                  Permissions.FLAGS.SEND_MESSAGES,
-                                  Permissions.FLAGS.VIEW_CHANNEL,
+                                  PermissionsBitField.Flags.SendMessages,
+                                  PermissionsBitField.Flags
+                                    .SendMessagesInThreads,
+                                  PermissionsBitField.Flags.ViewChannel,
                                 ],
                               },
                               {
                                 id: role.id,
                                 deny: [
-                                  Permissions.FLAGS.VIEW_CHANNEL,
-                                  Permissions.FLAGS.SEND_MESSAGES,
-                                  Permissions.FLAGS.READ_MESSAGE_HISTORY,
+                                  PermissionsBitField.Flags.ViewChannel,
+                                  PermissionsBitField.Flags.SendMessages,
+                                  PermissionsBitField.Flags
+                                    .SendMessagesInThreads,
+                                  PermissionsBitField.Flags.ReadMessageHistory,
                                 ],
                               },
                               {
                                 id: roleMaster.id,
                                 allow: [
-                                  Permissions.FLAGS.VIEW_CHANNEL,
-                                  Permissions.FLAGS.SEND_MESSAGES,
-                                  Permissions.FLAGS.READ_MESSAGE_HISTORY,
+                                  PermissionsBitField.Flags.ViewChannel,
+                                  PermissionsBitField.Flags.SendMessages,
+                                  PermissionsBitField.Flags
+                                    .SendMessagesInThreads,
+                                  PermissionsBitField.Flags.ReadMessageHistory,
                                 ],
                               },
                               {
                                 id: roleOwner.id,
                                 allow: [
-                                  Permissions.FLAGS.VIEW_CHANNEL,
-                                  Permissions.FLAGS.SEND_MESSAGES,
-                                  Permissions.FLAGS.READ_MESSAGE_HISTORY,
+                                  PermissionsBitField.Flags.ViewChannel,
+                                  PermissionsBitField.Flags.SendMessages,
+                                  PermissionsBitField.Flags
+                                    .SendMessagesInThreads,
+                                  PermissionsBitField.Flags.ReadMessageHistory,
                                 ],
                               },
                             ],
                           });
 
                           guild.channels.create("👾｜Dungeon Party", {
-                            type: "GUILD_VOICE",
+                            type: ChannelType.GuildVoice,
                             parent: parent,
                             permissionOverwrites: [
                               {
                                 id: guild.roles.everyone.id,
                                 deny: [
-                                  Permissions.FLAGS.SEND_MESSAGES,
-                                  Permissions.FLAGS.VIEW_CHANNEL,
+                                  PermissionsBitField.Flags.SendMessages,
+                                  PermissionsBitField.Flags
+                                    .SendMessagesInThreads,
+                                  PermissionsBitField.Flags.ViewChannel,
                                 ],
                               },
                               {
                                 id: role.id,
-                                allow: [Permissions.FLAGS.VIEW_CHANNEL],
+                                allow: [PermissionsBitField.Flags.ViewChannel],
                               },
                               {
                                 id: roleMaster.id,
                                 allow: [
-                                  Permissions.FLAGS.VIEW_CHANNEL,
-                                  Permissions.FLAGS.MUTE_MEMBERS,
+                                  PermissionsBitField.Flags.ViewChannel,
+                                  PermissionsBitField.Flags.MuteMembers,
                                 ],
                               },
                               {
                                 id: roleOwner.id,
                                 allow: [
-                                  Permissions.FLAGS.VIEW_CHANNEL,
-                                  Permissions.FLAGS.MUTE_MEMBERS,
+                                  PermissionsBitField.Flags.ViewChannel,
+                                  PermissionsBitField.Flags.MuteMembers,
                                 ],
                               },
                             ],
@@ -273,9 +312,12 @@ module.exports = {
             .setColor("#013455")
             .setTitle("Campain " + name + " created!")
             .setDescription(
-              "Your new campain has been created, and now you got owner permissions!"
+              "Your new campain has been created, and now you got owner PermissionsBitField!"
             )
-            .setAuthor({ name: 'Dungeon Helper', iconURL: DungeonHelper.user.displayAvatarURL()})
+            .setAuthor({
+              name: "Dungeon Helper",
+              iconURL: DungeonHelper.user.displayAvatarURL(),
+            })
             .setThumbnail(DungeonHelper.user.displayAvatarURL())
             .setFooter({
               text: `Dungeon Helper`,
@@ -292,7 +334,10 @@ module.exports = {
             .setColor("#013455")
             .setTitle("Campain " + name + " exist!")
             .setDescription("The campaign already exist")
-            .setAuthor({ name: 'Dungeon Helper', iconURL: DungeonHelper.user.displayAvatarURL()})
+            .setAuthor({
+              name: "Dungeon Helper",
+              iconURL: DungeonHelper.user.displayAvatarURL(),
+            })
             .setThumbnail(DungeonHelper.user.displayAvatarURL())
             .setFooter({
               text: `Dungeon Helper`,
@@ -310,7 +355,7 @@ module.exports = {
           .getString("campaing")
           .capitalize();
         const campaignCategory = guild.channels.cache.find(
-          (c) => c.type == "GUILD_CATEGORY" && c.name == "🎲・" + campaignName
+          (c) => c.type == ChannelType.GuildCategory && c.name == "🎲・" + campaignName
         );
 
         if (campaignCategory != null) {
@@ -322,7 +367,7 @@ module.exports = {
             if (
               guild.channels.cache.find(
                 (c) =>
-                  c.type == "GUILD_TEXT" &&
+                  c.type == ChannelType.GuildText &&
                   c.topic ==
                     "Note of the campaign " +
                       campaignName +
@@ -332,7 +377,7 @@ module.exports = {
             ) {
               guild.channels
                 .create("📋｜note", {
-                  type: "GUILD_TEXT",
+                  type: ChannelType.GuildText,
                   topic:
                     "Note of the campaign " +
                     campaignName +
@@ -344,16 +389,18 @@ module.exports = {
                     {
                       id: guild.roles.everyone.id,
                       deny: [
-                        Permissions.FLAGS.SEND_MESSAGES,
-                        Permissions.FLAGS.VIEW_CHANNEL,
+                        PermissionsBitField.Flags.SendMessages,
+                        PermissionsBitField.Flags.SendMessagesInThreads,
+                        PermissionsBitField.Flags.ViewChannel,
                       ],
                     },
                     {
                       id: interaction.user.id,
                       allow: [
-                        Permissions.FLAGS.VIEW_CHANNEL,
-                        Permissions.FLAGS.SEND_MESSAGES,
-                        Permissions.FLAGS.READ_MESSAGE_HISTORY,
+                        PermissionsBitField.Flags.ViewChannel,
+                        PermissionsBitField.Flags.SendMessages,
+                        PermissionsBitField.Flags.SendMessagesInThreads,
+                        PermissionsBitField.Flags.ReadMessageHistory,
                       ],
                     },
                   ],
@@ -391,7 +438,7 @@ module.exports = {
                   "You already have a note channel.\nYou can find it here <#" +
                     guild.channels.cache.find(
                       (c) =>
-                        c.type == "GUILD_TEXT" &&
+                        c.type == ChannelType.GuildText &&
                         c.topic ==
                           "Note of the campaign " +
                             campaignName +
@@ -433,7 +480,7 @@ module.exports = {
                 "You're a GM, you can take notes here <#" +
                   guild.channels.cache.find(
                     (c) =>
-                      c.type == "GUILD_TEXT" &&
+                      c.type == ChannelType.GuildText &&
                       c.name == "🐉｜master" &&
                       c.parent == campaignCategory
                   ).id +
@@ -482,7 +529,10 @@ module.exports = {
             .setColor("#013455")
             .setTitle("The campaign doesn't exist")
             .setDescription("The campaign " + campaignName + " doesn't exist!")
-            .setAuthor({ name: 'Dungeon Helper', iconURL: DungeonHelper.user.displayAvatarURL()})
+            .setAuthor({
+              name: "Dungeon Helper",
+              iconURL: DungeonHelper.user.displayAvatarURL(),
+            })
             .setThumbnail(DungeonHelper.user.displayAvatarURL())
             .setFooter({
               text: `Dungeon Helper`,
@@ -501,7 +551,10 @@ module.exports = {
         .setColor("#013455")
         .setTitle("Accept the rules")
         .setDescription("To use the commands you have to accept the rules")
-        .setAuthor({ name: 'Dungeon Helper', iconURL: DungeonHelper.user.displayAvatarURL()})
+        .setAuthor({
+          name: "Dungeon Helper",
+          iconURL: DungeonHelper.user.displayAvatarURL(),
+        })
         .setThumbnail(DungeonHelper.user.displayAvatarURL())
         .setFooter({
           text: `Dungeon Helper`,

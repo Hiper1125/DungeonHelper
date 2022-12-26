@@ -1,6 +1,5 @@
 const { SlashCommandBuilder } = require("@discordjs/builders");
 const {
-  Permissions,
   EmbedBuilder,
   ActionRowBuilder,
   ButtonBuilder,
