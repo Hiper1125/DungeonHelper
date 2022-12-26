@@ -1,5 +1,5 @@
 const { SlashCommandBuilder } = require("@discordjs/builders");
-const { Permissions, MessageEmbed } = require("discord.js");
+const { Permissions, EmbedBuilder } = require("discord.js");
 var XMLHttpRequest = require("xhr2");
 
 module.exports = {
@@ -12,15 +12,18 @@ module.exports = {
         .setName("category")
         .setDescription("The category of the information you're looking for")
         .setRequired(true)
-        .addChoice("Race", "races")
-        .addChoice("Skill", "skills")
-        .addChoice("Spell", "spells")
-        .addChoice("Class", "classes")
-        .addChoice("Monster", "monsters")
-        .addChoice("Language", "languages")
-        .addChoice("Condition", "conditions")
-        .addChoice("Equipment", "equipment")
-        .addChoice("Magic Item", "magic-items")
+        .addChoices(
+          { name: "Adventurer", value: "adventurer" },
+          { name: "Race", value: "races" },
+          { name: "Skill", value: "skills" },
+          { name: "Spell", value: "spells" },
+          { name: "Class", value: "classes" },
+          { name: "Monster", value: "monsters" },
+          { name: "Language", value: "languages" },
+          { name: "Condition", value: "conditions" },
+          { name: "Equipment", value: "equipment" },
+          { name: "Magic Item", value: "magic-items" }
+        )
     )
 
     .addStringOption((option) =>
@@ -43,7 +46,7 @@ module.exports = {
 
     getJSON(url, async function (err, data) {
       if (err !== null) {
-        const embed = new MessageEmbed()
+        const embed = new EmbedBuilder()
           .setColor("#e6101d")
           .setTitle("Error " + err)
           .setDescription(
@@ -51,9 +54,12 @@ module.exports = {
               interaction.options.getString("keyword") +
               ") was not found on the documentation, try with a different keyword!"
           )
-          .setAuthor("Dungeon Helper", DungeonHelper.user.displayAvatarURL())
+          .setAuthor({ name: 'Dungeon Helper', iconURL: DungeonHelper.user.displayAvatarURL()})
           .setThumbnail(DungeonHelper.user.displayAvatarURL())
-          .setFooter("Dungeon Helper", DungeonHelper.user.displayAvatarURL());
+          .setFooter({
+            text: `Dungeon Helper`,
+            iconURL: DungeonHelper.user.displayAvatarURL(),
+          });
 
         await interaction.editReply({
           content: "‎",
@@ -63,12 +69,15 @@ module.exports = {
       } else {
         //different embed based on the choosen category
 
-        let embed = new MessageEmbed()
+        let embed = new EmbedBuilder()
           .setColor("#e6101d")
           .setTitle(data.name)
-          .setAuthor("Dungeon Helper", DungeonHelper.user.displayAvatarURL())
+          .setAuthor({ name: 'Dungeon Helper', iconURL: DungeonHelper.user.displayAvatarURL()})
           .setThumbnail(DungeonHelper.user.displayAvatarURL())
-          .setFooter("Dungeon Helper", DungeonHelper.user.displayAvatarURL());
+          .setFooter({
+            text: `Dungeon Helper`,
+            iconURL: DungeonHelper.user.displayAvatarURL(),
+          });
 
         switch (category) {
           case "races":

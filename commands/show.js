@@ -1,9 +1,10 @@
 const { SlashCommandBuilder } = require("@discordjs/builders");
 const {
   Permissions,
-  MessageEmbed,
-  MessageActionRow,
-  MessageButton,
+  EmbedBuilder,
+  ActionRowBuilder,
+  ButtonBuilder,
+  ButtonStyle
 } = require("discord.js");
 var XMLHttpRequest = require("xhr2");
 
@@ -17,13 +18,15 @@ module.exports = {
         .setName("category")
         .setDescription("The category of the information you're looking for")
         .setRequired(true)
-        .addChoice("Feats", "feats")
-        .addChoice("Races", "races")
-        .addChoice("Spells", "spells")
-        .addChoice("Classes", "classes")
-        .addChoice("Monsters", "monsters")
-        .addChoice("Languages", "languages")
-        .addChoice("Equipments", "equipment")
+        .addChoices(
+          { name: "Feats", value: "feats" },
+          { name: "Races", value: "races" },
+          { name: "Spells", value: "spells" },
+          { name: "Classes", value: "classes" },
+          { name: "Monsters", value: "monsters" },
+          { name: "Languages", value: "languages" },
+          { name: "Equipments", value: "equipment" }
+        )
     ),
 
   async execute(interaction) {
@@ -36,7 +39,7 @@ module.exports = {
 
     getJSON(url, async function (err, data) {
       if (err !== null) {
-        const embed = new MessageEmbed()
+        const embed = new EmbedBuilder()
           .setColor("#e6101d")
           .setTitle("Error " + err)
           .setDescription(
@@ -44,9 +47,12 @@ module.exports = {
               interaction.options.getString("keyword") +
               ") was not found on the documentation, try with a different one!"
           )
-          .setAuthor("Dungeon Helper", DungeonHelper.user.displayAvatarURL())
+          .setAuthor({ name: 'Dungeon Helper', iconURL: DungeonHelper.user.displayAvatarURL()})
           .setThumbnail(DungeonHelper.user.displayAvatarURL())
-          .setFooter("Dungeon Helper", DungeonHelper.user.displayAvatarURL());
+          .setFooter({
+            text: `Dungeon Helper`,
+            iconURL: DungeonHelper.user.displayAvatarURL(),
+          });
 
         await interaction.editReply({
           content: "‎",
@@ -59,7 +65,7 @@ module.exports = {
         let index = 0;
         let coloumn = 3;
 
-        let embed = new MessageEmbed()
+        let embed = new EmbedBuilder()
           .setColor("#e6101d")
           .setTitle(
             "Found " +
@@ -67,10 +73,15 @@ module.exports = {
               " " +
               interaction.options.getString("category").toLowerCase()
           )
-          .setDescription("Page " + (index + 1) + "/" + Math.ceil(data.count / amountToShow))
-          .setAuthor("Dungeon Helper", DungeonHelper.user.displayAvatarURL())
+          .setDescription(
+            "Page " + (index + 1) + "/" + Math.ceil(data.count / amountToShow)
+          )
+          .setAuthor({ name: 'Dungeon Helper', iconURL: DungeonHelper.user.displayAvatarURL()})
           .setThumbnail(DungeonHelper.user.displayAvatarURL())
-          .setFooter("Dungeon Helper", DungeonHelper.user.displayAvatarURL());
+          .setFooter({
+            text: `Dungeon Helper`,
+            iconURL: DungeonHelper.user.displayAvatarURL(),
+          });
 
         for (let i = 0; i < coloumn; i++) {
           var elements = elementsToString(
@@ -86,19 +97,19 @@ module.exports = {
           }
         }
 
-        const row = new MessageActionRow()
+        const row = new ActionRowBuilder()
           .addComponents(
-            new MessageButton()
+            new ButtonBuilder()
               .setCustomId("before")
               .setLabel("﹤")
-              .setStyle("PRIMARY")
+              .setStyle(ButtonStyle.Primary)
               .setDisabled(true)
           )
           .addComponents(
-            new MessageButton()
+            new ButtonBuilder()
               .setCustomId("next")
               .setLabel("﹥")
-              .setStyle("PRIMARY")
+              .setStyle(ButtonStyle.Primary)
               .setDisabled(amountToShow >= data.count)
           );
 
@@ -129,18 +140,23 @@ module.exports = {
             }
           }
 
-          let embed = new MessageEmbed()
-          .setColor("#e6101d")
-          .setTitle(
-            "Found " +
-              data.count +
-              " " +
-              interaction.options.getString("category").toLowerCase()
-          )
-          .setDescription("Page " + (index + 1) + "/" + Math.ceil(data.count / amountToShow))
-          .setAuthor("Dungeon Helper", DungeonHelper.user.displayAvatarURL())
-          .setThumbnail(DungeonHelper.user.displayAvatarURL())
-          .setFooter("Dungeon Helper", DungeonHelper.user.displayAvatarURL());
+          let embed = new EmbedBuilder()
+            .setColor("#e6101d")
+            .setTitle(
+              "Found " +
+                data.count +
+                " " +
+                interaction.options.getString("category").toLowerCase()
+            )
+            .setDescription(
+              "Page " + (index + 1) + "/" + Math.ceil(data.count / amountToShow)
+            )
+            .setAuthor({ name: 'Dungeon Helper', iconURL: DungeonHelper.user.displayAvatarURL()})
+            .setThumbnail(DungeonHelper.user.displayAvatarURL())
+            .setFooter({
+              text: `Dungeon Helper`,
+              iconURL: DungeonHelper.user.displayAvatarURL(),
+            });
 
           for (let i = 0; i < coloumn; i++) {
             var elements = elementsToString(
@@ -156,19 +172,19 @@ module.exports = {
             }
           }
 
-          const row = new MessageActionRow()
+          const row = new ActionRowBuilder()
             .addComponents(
-              new MessageButton()
+              new ButtonBuilder()
                 .setCustomId("before")
                 .setLabel("﹤")
-                .setStyle("PRIMARY")
+                .setStyle(ButtonStyle.Primary)
                 .setDisabled(index === 0)
             )
             .addComponents(
-              new MessageButton()
+              new ButtonBuilder()
                 .setCustomId("next")
                 .setLabel("﹥")
-                .setStyle("PRIMARY")
+                .setStyle(ButtonStyle.Primary)
                 .setDisabled(amountToShow * (index + 1) >= data.count)
             );
 

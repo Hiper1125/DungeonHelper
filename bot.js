@@ -1,4 +1,4 @@
-const { Client, Collection, Intents } = require("discord.js");
+const { Client, Collection, GatewayIntentBits } = require("discord.js");
 const { REST } = require("@discordjs/rest");
 const { Routes } = require("discord-api-types/v9");
 const { token, clientId, guildId } = require("./config.json");
@@ -9,7 +9,7 @@ const commandFiles = fs
   .filter((file) => file.endsWith(".js"));
 
 const DungeonHelper = new Client({
-  intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES],
+  intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages],
 });
 
 DungeonHelper.commands = new Collection();

@@ -1,5 +1,5 @@
 const { SlashCommandBuilder } = require("@discordjs/builders");
-const { Permissions, MessageEmbed } = require("discord.js");
+const { Permissions, EmbedBuilder } = require("discord.js");
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -7,59 +7,70 @@ module.exports = {
     .setDescription("Remove a user to a campaign")
 
     .addStringOption((option) =>
-        option
-        .setName("campaign")
-        .setDescription("Campaign")
-        .setRequired(true)
+      option.setName("campaign").setDescription("Campaign").setRequired(true)
     )
 
     .addUserOption((option) =>
-        option
-        .setName("user")
-        .setDescription("User to remove")
-        .setRequired(true)
+      option.setName("user").setDescription("User to remove").setRequired(true)
     ),
 
   async execute(interaction) {
     await interaction.deferReply({ content: "Executing...", ephemeral: true });
 
     const guild = DungeonHelper.guilds.cache.get(interaction.guildId);
-    if (interaction.member.roles.cache.get(guild.roles.cache.find(r => r.name === "Commander").id) != null || 
-    interaction.member.roles.cache.get(guild.roles.cache.find(r => r.name === "Adventurer").id) != null) {  
-    const campaign = interaction.options.getString("campaign").capitalize();
-    const user = interaction.options.getUser("user");
+    if (
+      interaction.member.roles.cache.get(
+        guild.roles.cache.find((r) => r.name === "Commander").id
+      ) != null ||
+      interaction.member.roles.cache.get(
+        guild.roles.cache.find((r) => r.name === "Adventurer").id
+      ) != null
+    ) {
+      const campaign = interaction.options.getString("campaign").capitalize();
+      const user = interaction.options.getUser("user");
 
-    const member = guild.members.cache.get(user.id);
+      const member = guild.members.cache.get(user.id);
 
-    const campaignRole = guild.roles.cache.find(r => r.name === campaign);
-    const campaignRoleMaster = guild.roles.cache.find(r => r.name === campaign + " Master");
-    const campaignRoleOwner = guild.roles.cache.find(r => r.name === campaign + " Owner");
+      const campaignRole = guild.roles.cache.find((r) => r.name === campaign);
+      const campaignRoleMaster = guild.roles.cache.find(
+        (r) => r.name === campaign + " Master"
+      );
+      const campaignRoleOwner = guild.roles.cache.find(
+        (r) => r.name === campaign + " Owner"
+      );
 
-    if (interaction.member.roles.cache.get(campaignRoleMaster.id) != null) {
-        if (member.roles.cache.get(campaignRoleMaster.id) != null && member.roles.cache.get(campaignRoleOwner.id) != null) {
-            member.roles.remove(campaignRole);
-        
-            success(interaction, campaign, user);
+      if (interaction.member.roles.cache.get(campaignRoleMaster.id) != null) {
+        if (
+          member.roles.cache.get(campaignRoleMaster.id) != null &&
+          member.roles.cache.get(campaignRoleOwner.id) != null
+        ) {
+          member.roles.remove(campaignRole);
+
+          success(interaction, campaign, user);
         } else {
-            error(interaction, campaign, user);
+          error(interaction, campaign, user);
         }
-    } else if (interaction.member.roles.cache.get(campaignRoleOwner.id) != null) {
+      } else if (
+        interaction.member.roles.cache.get(campaignRoleOwner.id) != null
+      ) {
         member.roles.remove(campaignRole);
         member.roles.remove(campaignRoleMaster);
 
         success(interaction, campaign, user);
-    } else {
+      } else {
         error(interaction, campaign, user);
-    }} else {
-      const embed = new MessageEmbed()
-      .setColor("#013455")
-      .setTitle("Accept the rules")
-      .setDescription(
-        "To use the commands you have to accept the rules"
-      )
-      .setAuthor("Dungeon Helper", DungeonHelper.user.displayAvatarURL())
-      .setThumbnail(DungeonHelper.user.displayAvatarURL())
-      .setFooter("Dungeon Helper", DungeonHelper.user.displayAvatarURL());
+      }
+    } else {
+      const embed = new EmbedBuilder()
+        .setColor("#013455")
+        .setTitle("Accept the rules")
+        .setDescription("To use the commands you have to accept the rules")
+        .setAuthor({ name: 'Dungeon Helper', iconURL: DungeonHelper.user.displayAvatarURL()})
+        .setThumbnail(DungeonHelper.user.displayAvatarURL())
+        .setFooter({
+          text: `Dungeon Helper`,
+          iconURL: DungeonHelper.user.displayAvatarURL(),
+        });
 
       await interaction.editReply({
         content: "Error!",
@@ -71,35 +82,48 @@ module.exports = {
 };
 
 async function error(interaction, campaign, user) {
-    const embed = new MessageEmbed()
-    .setColor('#013455')
+  const embed = new EmbedBuilder()
+    .setColor("#013455")
     .setTitle("You don't have the permission to remove")
-    .setDescription("Cannot remove the user " + user.username + " from the campaign " + campaign)
-    .setAuthor("Dungeon Helper", DungeonHelper.user.displayAvatarURL())
+    .setDescription(
+      "Cannot remove the user " +
+        user.username +
+        " from the campaign " +
+        campaign
+    )
+    .setAuthor({ name: 'Dungeon Helper', iconURL: DungeonHelper.user.displayAvatarURL()})
     .setThumbnail(DungeonHelper.user.displayAvatarURL())
-    .setFooter("Dungeon Helper", DungeonHelper.user.displayAvatarURL());
+    .setFooter({
+      text: `Dungeon Helper`,
+      iconURL: DungeonHelper.user.displayAvatarURL(),
+    });
 
   await interaction.editReply({
     content: "Error!",
     ephemeral: true,
-    embeds: [embed]
+    embeds: [embed],
   });
 }
 
 async function success(interaction, campaign, user) {
-    const embed = new MessageEmbed()
-    .setColor('#013455')
+  const embed = new EmbedBuilder()
+    .setColor("#013455")
     .setTitle("You have removed")
-    .setDescription("The user " + user.username + " is removed from the campaign " + campaign)
-    .setAuthor("Dungeon Helper", DungeonHelper.user.displayAvatarURL())
+    .setDescription(
+      "The user " + user.username + " is removed from the campaign " + campaign
+    )
+    .setAuthor({ name: 'Dungeon Helper', iconURL: DungeonHelper.user.displayAvatarURL()})
     .setThumbnail(DungeonHelper.user.displayAvatarURL())
-    .setFooter("Dungeon Helper", DungeonHelper.user.displayAvatarURL());
+    .setFooter({
+      text: `Dungeon Helper`,
+      iconURL: DungeonHelper.user.displayAvatarURL(),
+    });
 
   await interaction.editReply({
     content: "Succes!",
     ephemeral: true,
-    embeds: [embed]
-  }); 
+    embeds: [embed],
+  });
 }
 
 String.prototype.capitalize = function () {
